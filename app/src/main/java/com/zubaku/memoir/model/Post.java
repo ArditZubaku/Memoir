@@ -13,7 +13,13 @@ public class Post {
   // When using Firebase, always create an empty constructor
   public Post() {}
 
-  public Post(String title, String description, String imageURL, String userID, String username, Timestamp timeAdded) {
+  public Post(
+      String title,
+      String description,
+      String imageURL,
+      String userID,
+      String username,
+      Timestamp timeAdded) {
     this.title = title;
     this.description = description;
     this.imageURL = imageURL;
