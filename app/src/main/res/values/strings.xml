@@ -8,4 +8,7 @@
     <string name="test">Test</string>
     <string name="description">Description goes here</string>
     <string name="date_created">Date goes here</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="username">Username</string>
+    <string name="sign_up">Sign Up</string>
 </resources>
