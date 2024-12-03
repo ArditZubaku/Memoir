@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
           return insets;
         });
 
+    createAccountButton = findViewById(R.id.createAccountButton);
+
     createAccountButton.setOnClickListener(
         v -> startActivity(new Intent(MainActivity.this, SignUpActivity.class)));
   }
