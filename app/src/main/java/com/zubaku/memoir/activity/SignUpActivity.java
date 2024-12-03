@@ -72,5 +72,60 @@ public class SignUpActivity extends AppCompatActivity {
             // No user is logged in
           }
         };
+
+    signUpButton.setOnClickListener(
+        v -> {
+          if (validateTextFields(signUpUsername, signUpEmail, signUpPassword)) {
+            String username = getStringValue(signUpUsername);
+            String email = getStringValue(signUpEmail);
+            String password = getStringValue(signUpPassword);
+
+            createUserAccount(username, email, password);
+          } else {
+            toast("Please fill out all the fields!");
+          }
+        });
+  }
+
+  private void createUserAccount(String username, String email, String password) {
+    if (validateParams(username, email, password)) {
+      // Create a new user with the email and password
+      auth.createUserWithEmailAndPassword(email, password)
+          .addOnCompleteListener(
+              task -> {
+                if (task.isSuccessful()) {
+                  toast("User Created Successfully");
+                  clearFields();
+                } else {
+                  toast("User Creation Failed");
+                }
+              });
+    }
+  }
+
+  private void toast(String text) {
+    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+  }
+
+  private void clearFields() {
+    signUpUsername.setText(null);
+    signUpEmail.setText(null);
+    signUpPassword.setText(null);
+  }
+
+  private boolean validateParams(String username, String email, String password) {
+    return !TextUtils.isEmpty(username)
+        && !TextUtils.isEmpty(email)
+        && !TextUtils.isEmpty(password);
+  }
+
+  private boolean validateTextFields(TextView username, TextView email, TextView password) {
+    return !TextUtils.isEmpty(username.getText().toString())
+        && !TextUtils.isEmpty(email.getText().toString())
+        && !TextUtils.isEmpty(password.getText().toString());
+  }
+
+  private String getStringValue(TextView textView) {
+    return textView.getText().toString().trim();
   }
 }
