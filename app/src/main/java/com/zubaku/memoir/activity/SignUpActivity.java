@@ -9,11 +9,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -27,6 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
   AutoCompleteTextView signUpEmail;
   EditText signUpPassword;
   Button signUpButton;
+  TextView signUpErrorMessage;
 
   // Firebase Auth
   private FirebaseAuth auth;
@@ -57,6 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
     signUpEmail = findViewById(R.id.signUpEmail);
     signUpPassword = findViewById(R.id.signUpPassword);
     signUpButton = findViewById(R.id.signUpButton);
+    signUpErrorMessage = findViewById(R.id.signUpErrorMessage);
 
     auth = FirebaseAuth.getInstance();
 
@@ -97,6 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
                   toast("User Created Successfully");
                   clearFields();
                 } else {
+                  signUpErrorMessage.setText(buildErrorMessage(task));
                   toast("User Creation Failed");
                 }
               });
@@ -111,6 +117,7 @@ public class SignUpActivity extends AppCompatActivity {
     signUpUsername.setText(null);
     signUpEmail.setText(null);
     signUpPassword.setText(null);
+    signUpErrorMessage.setText(null);
   }
 
   private boolean validateParams(String username, String email, String password) {
@@ -127,5 +134,14 @@ public class SignUpActivity extends AppCompatActivity {
 
   private String getStringValue(TextView textView) {
     return textView.getText().toString().trim();
+  }
+
+  @NonNull
+  private String buildErrorMessage(@NonNull Task<AuthResult> task) {
+    Exception exception = task.getException();
+    if (exception != null && exception.getMessage() != null) {
+      return String.join("\n", exception.getMessage().split("(?<=\\.)"));
+    }
+    return "An unknown error occurred.";
   }
 }
