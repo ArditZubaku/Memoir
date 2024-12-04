@@ -1,12 +1,15 @@
 package com.zubaku.memoir.activity;
 
+import static com.zubaku.memoir.utils.Helpers.areParamsValid;
+import static com.zubaku.memoir.utils.Helpers.areTextFieldsValid;
+import static com.zubaku.memoir.utils.Helpers.getStringValue;
+import static com.zubaku.memoir.utils.Helpers.showToast;
+
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -80,37 +83,33 @@ public class SignUpActivity extends AppCompatActivity {
 
     signUpButton.setOnClickListener(
         v -> {
-          if (validateTextFields(signUpUsername, signUpEmail, signUpPassword)) {
+          if (areTextFieldsValid(signUpUsername, signUpEmail, signUpPassword)) {
             String username = getStringValue(signUpUsername);
             String email = getStringValue(signUpEmail);
             String password = getStringValue(signUpPassword);
 
             createUserAccount(username, email, password);
           } else {
-            toast("Please fill out all the fields!");
+            showToast("Please fill out all the fields!", this);
           }
         });
   }
 
   private void createUserAccount(String username, String email, String password) {
-    if (validateParams(username, email, password)) {
+    if (areParamsValid(username, email, password)) {
       // Create a new user with the email and password
       auth.createUserWithEmailAndPassword(email, password)
           .addOnCompleteListener(
               task -> {
                 if (task.isSuccessful()) {
-                  toast("User Created Successfully");
+                  showToast("User Created Successfully", this);
                   clearFields();
                 } else {
                   signUpErrorMessage.setText(buildErrorMessage(task));
-                  toast("User Creation Failed");
+                  showToast("User Creation Failed", this);
                 }
               });
     }
-  }
-
-  private void toast(String text) {
-    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
   }
 
   private void clearFields() {
@@ -118,22 +117,6 @@ public class SignUpActivity extends AppCompatActivity {
     signUpEmail.setText(null);
     signUpPassword.setText(null);
     signUpErrorMessage.setText(null);
-  }
-
-  private boolean validateParams(String username, String email, String password) {
-    return !TextUtils.isEmpty(username)
-        && !TextUtils.isEmpty(email)
-        && !TextUtils.isEmpty(password);
-  }
-
-  private boolean validateTextFields(TextView username, TextView email, TextView password) {
-    return !TextUtils.isEmpty(username.getText().toString())
-        && !TextUtils.isEmpty(email.getText().toString())
-        && !TextUtils.isEmpty(password.getText().toString());
-  }
-
-  private String getStringValue(TextView textView) {
-    return textView.getText().toString().trim();
   }
 
   @NonNull
