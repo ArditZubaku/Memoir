@@ -2,6 +2,7 @@ package com.zubaku.memoir.activity;
 
 import static com.zubaku.memoir.utils.Helpers.areParamsValid;
 import static com.zubaku.memoir.utils.Helpers.areTextFieldsValid;
+import static com.zubaku.memoir.utils.Helpers.buildErrorMessage;
 import static com.zubaku.memoir.utils.Helpers.getStringValue;
 import static com.zubaku.memoir.utils.Helpers.showToast;
 
@@ -105,7 +106,7 @@ public class SignUpActivity extends AppCompatActivity {
                   showToast("User Created Successfully", this);
                   clearFields();
                 } else {
-                  signUpErrorMessage.setText(buildErrorMessage(task));
+                  signUpErrorMessage.setText(buildErrorMessage(task.getException()));
                   showToast("User Creation Failed", this);
                 }
               });
@@ -117,14 +118,5 @@ public class SignUpActivity extends AppCompatActivity {
     signUpEmail.setText(null);
     signUpPassword.setText(null);
     signUpErrorMessage.setText(null);
-  }
-
-  @NonNull
-  private String buildErrorMessage(@NonNull Task<AuthResult> task) {
-    Exception exception = task.getException();
-    if (exception != null && exception.getMessage() != null) {
-      return String.join("\n", exception.getMessage().split("(?<=\\.)"));
-    }
-    return "An unknown error occurred.";
   }
 }

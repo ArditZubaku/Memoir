@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import java.util.Arrays;
 
 public class Helpers {
@@ -30,5 +32,14 @@ public class Helpers {
   public static boolean areTextFieldsValid(TextView... fields) {
     if (fields == null) return false;
     return Arrays.stream(fields).map(Helpers::getStringValue).noneMatch(TextUtils::isEmpty);
+  }
+
+  // Build an error message to be shown from an exception
+  @NonNull
+  public static String buildErrorMessage(Exception exception) {
+    if (exception != null && exception.getMessage() != null) {
+      return String.join("\n", exception.getMessage().split("(?<=\\.)"));
+    }
+    return "An unknown error occurred.";
   }
 }

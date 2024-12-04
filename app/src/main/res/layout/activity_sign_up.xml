@@ -81,6 +81,7 @@
         app:layout_constraintTop_toBottomOf="@+id/signUpPassword" />
 
     <TextView
+        android:textColor="#FF0000"
         android:id="@+id/signUpErrorMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
