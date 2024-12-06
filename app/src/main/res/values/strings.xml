@@ -23,5 +23,6 @@
     <string name="please_fill_fields">Please fill out all the fields!</string>
     <string name="login_failed">Login Failed!!!</string>
     <string name="fill_and_select_image">Please fill in all fields and select an image.</string>
+    <string name="go_back_to_sign_in">Go back to Sign In</string>
 
 </resources>

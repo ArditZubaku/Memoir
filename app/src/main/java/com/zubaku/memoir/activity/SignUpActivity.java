@@ -6,6 +6,7 @@ import static com.zubaku.memoir.utils.Helpers.buildErrorMessage;
 import static com.zubaku.memoir.utils.Helpers.getStringValue;
 import static com.zubaku.memoir.utils.Helpers.showToast;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.zubaku.memoir.MainActivity;
 import com.zubaku.memoir.R;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -28,6 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
   AutoCompleteTextView signUpEmail;
   EditText signUpPassword;
   Button signUpButton;
+  Button goBackToSignInButton;
   TextView signUpErrorMessage;
 
   // Firebase Auth
@@ -53,6 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
     signUpPassword = findViewById(R.id.signUpPassword);
     signUpButton = findViewById(R.id.signUpButton);
     signUpErrorMessage = findViewById(R.id.signUpErrorMessage);
+    goBackToSignInButton = findViewById(R.id.goBackToSignInButton);
 
     // Initialize Firebase Auth
     auth = FirebaseAuth.getInstance();
@@ -69,6 +73,12 @@ public class SignUpActivity extends AppCompatActivity {
           } else {
             showToast(getString(R.string.please_fill_fields), this);
           }
+        });
+
+    goBackToSignInButton.setOnClickListener(
+        v -> {
+          startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+          finish();
         });
   }
 
@@ -107,7 +117,6 @@ public class SignUpActivity extends AppCompatActivity {
                 // Successfully updated display name
                 showToast(getString(R.string.sign_up_success), this);
                 clearFields();
-                // TODO: Add a go back to sign in button
               } else {
                 signUpErrorMessage.setText(getString(R.string.error_updating_profile));
               }
