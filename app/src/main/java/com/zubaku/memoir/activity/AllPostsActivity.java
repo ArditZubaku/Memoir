@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.zubaku.memoir.MainActivity;
@@ -123,11 +124,12 @@ public class AllPostsActivity extends AppCompatActivity {
   // Fetch posts from Firestore
   private void fetchPosts() {
     collectionReference
+        // Order by timeAdded, latest first
+        .orderBy("timeAdded", Query.Direction.DESCENDING)
         .get()
         .addOnSuccessListener(this::handleQuerySuccess)
         .addOnFailureListener(Helpers::buildErrorMessage);
   }
-
   // Handle the success of the Firestore query
   private void handleQuerySuccess(QuerySnapshot querySnapshot) {
     // Save the size of the list before clearing
