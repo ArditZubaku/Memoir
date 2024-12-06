@@ -43,4 +43,7 @@
     <string name="post_updated_successfully">Post updated successfully</string>
     <string name="title_and_description_cannot_be_empty">Title and description cannot be empty</string>
     <string name="are_you_sure_you_want_to_delete_this_post">Are you sure you want to delete this post?</string>
+    <string name="welcome_to_the_app">Welcome to the App!</string>
+    <string name="we_re_glad_to_have_you_here">We\'re glad to have you here.</string>
+    <string name="notification_permission_denied">Notification permission denied</string>
 </resources>
