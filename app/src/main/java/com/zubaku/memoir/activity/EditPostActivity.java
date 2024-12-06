@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -150,7 +151,7 @@ public class EditPostActivity extends AppCompatActivity {
     String updatedTitle = getStringValue(editTitle);
     String updatedDescription = getStringValue(editDescription);
 
-    if (areParamsValid(updatedTitle, updatedDescription)) {
+    if (!areParamsValid(updatedTitle, updatedDescription)) {
       showToast(getString(R.string.title_and_description_cannot_be_empty), this);
       return;
     }
