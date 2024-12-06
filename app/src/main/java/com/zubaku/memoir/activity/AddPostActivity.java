@@ -73,6 +73,7 @@ public class AddPostActivity extends AppCompatActivity {
   // Set up edge-to-edge layout for the activity
   private void setupEdgeToEdgeLayout() {
     EdgeToEdge.enable(this);
+    setContentView(R.layout.activity_add_post);
     ViewCompat.setOnApplyWindowInsetsListener(
         findViewById(R.id.main),
         (v, insets) -> {
