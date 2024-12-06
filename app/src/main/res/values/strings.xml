@@ -18,4 +18,10 @@
     <string name="post_date">Post Date</string>
     <string name="save_post">Save Post</string>
     <string name="error_updating_profile">Error updating profile</string>
+    <string name="sign_up_error_message">User Creation Failed</string>
+    <string name="sign_up_success">User Created Successfully</string>
+    <string name="please_fill_fields">Please fill out all the fields!</string>
+    <string name="login_failed">Login Failed!!!</string>
+    <string name="fill_and_select_image">Please fill in all fields and select an image.</string>
+
 </resources>

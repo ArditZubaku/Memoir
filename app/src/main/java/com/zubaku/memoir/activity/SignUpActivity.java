@@ -67,7 +67,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             createUserAccount(username, email, password);
           } else {
-            showToast("Please fill out all the fields!", this);
+            showToast(getString(R.string.please_fill_fields), this);
           }
         });
   }
@@ -87,7 +87,7 @@ public class SignUpActivity extends AppCompatActivity {
                 } else {
                   // If sign-up fails, show the error message
                   signUpErrorMessage.setText(buildErrorMessage(task.getException()));
-                  showToast("User Creation Failed", this);
+                  showToast(getString(R.string.sign_up_error_message), this);
                 }
               });
     }
@@ -105,12 +105,10 @@ public class SignUpActivity extends AppCompatActivity {
             profileUpdateTask -> {
               if (profileUpdateTask.isSuccessful()) {
                 // Successfully updated display name
-                showToast("User Created Successfully", this);
+                showToast(getString(R.string.sign_up_success), this);
                 clearFields();
                 // TODO: Add a go back to sign in button
               } else {
-                // Handle the failure to update profile
-                showToast("Error updating profile", this);
                 signUpErrorMessage.setText(getString(R.string.error_updating_profile));
               }
             });

@@ -201,6 +201,6 @@ public class AddPostActivity extends AppCompatActivity {
   // Show error message
   private void showErrorMessage() {
     progressBar.setVisibility(View.INVISIBLE);
-    showToast("Please fill in all fields and select an image.", this);
+    showToast(getString(R.string.fill_and_select_image), this);
   }
 }

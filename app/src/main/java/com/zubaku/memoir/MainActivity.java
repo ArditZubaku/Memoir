@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
           .addOnSuccessListener(this::onSuccess)
           .addOnFailureListener(this::onFailure);
     } else {
-      showToast("Please fill out all fields!", this);
+      showToast(getString(R.string.please_fill_fields), this);
     }
   }
 
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void onFailure(Exception exception) {
-    showToast("Login failed!", this);
+    showToast(getString(R.string.login_failed), this);
     errorMessage.setText(buildErrorMessage(exception));
   }
 }
