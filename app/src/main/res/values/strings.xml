@@ -12,4 +12,6 @@
     <string name="username">Username</string>
     <string name="sign_up">Sign Up</string>
     <string name="all_posts">All Posts</string>
+    <string name="add_post">Add Post</string>
+    <string name="sign_out">Sign Out</string>
 </resources>
