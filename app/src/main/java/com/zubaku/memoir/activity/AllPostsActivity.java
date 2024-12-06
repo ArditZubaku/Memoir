@@ -1,8 +1,11 @@
 package com.zubaku.memoir.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -13,10 +16,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.zubaku.memoir.MainActivity;
 import com.zubaku.memoir.R;
 import com.zubaku.memoir.adapter.AllPostsAdapter;
 import com.zubaku.memoir.model.Post;
 import com.zubaku.memoir.utils.Collections;
+import com.zubaku.memoir.utils.Helpers;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +35,7 @@ public class AllPostsActivity extends AppCompatActivity {
   private final FirebaseFirestore db = FirebaseFirestore.getInstance();
   private final CollectionReference collectionReference = db.collection(Collections.Posts);
 
-  // List of Journals
+  // List of Posts
   private List<Post> postsList;
 
   // RecyclerView
@@ -67,5 +74,26 @@ public class AllPostsActivity extends AppCompatActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.post_menu, menu);
     return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    int itemId = item.getItemId();
+
+    if (itemId == R.id.action_add) {
+      if (currentUser != null && auth != null) {
+        // Go to the add post activity
+        startActivity(new Intent(AllPostsActivity.this, AddPostActivity.class));
+      }
+    } else if (itemId == R.id.action_sign_out) {
+      if (currentUser != null && auth != null) {
+        auth.signOut();
+        startActivity(new Intent(AllPostsActivity.this, MainActivity.class));
+        // Close the activity
+        finish();
+      }
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 }
