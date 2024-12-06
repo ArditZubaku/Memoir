@@ -14,4 +14,7 @@
     <string name="all_posts">All Posts</string>
     <string name="add_post">Add Post</string>
     <string name="sign_out">Sign Out</string>
+    <string name="post_title">Post Title</string>
+    <string name="post_date">Post Date</string>
+    <string name="save_post">Save Post</string>
 </resources>

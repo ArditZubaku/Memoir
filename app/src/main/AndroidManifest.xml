@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Memoir"
         tools:targetApi="31">
         <activity
+            android:name=".activity.AddPostActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.AllPostsActivity"
             android:exported="false" />
         <activity
