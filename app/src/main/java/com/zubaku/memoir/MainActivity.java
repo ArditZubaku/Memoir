@@ -13,7 +13,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -33,6 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.zubaku.memoir.activity.AllPostsActivity;
 import com.zubaku.memoir.activity.ForgotPasswordActivity;
 import com.zubaku.memoir.activity.SignUpActivity;
+import com.zubaku.memoir.activity.TwoFactorActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -105,9 +105,8 @@ public class MainActivity extends AppCompatActivity {
   private void onSuccess(AuthResult authResult) {
     FirebaseUser currentUser = auth.getCurrentUser();
     if (currentUser != null) {
-      Log.i("Memoir", currentUser.toString());
-      startActivity(new Intent(MainActivity.this, AllPostsActivity.class));
       errorMessage.setText(null);
+      startActivity(new Intent(MainActivity.this, TwoFactorActivity.class));
     }
   }
 

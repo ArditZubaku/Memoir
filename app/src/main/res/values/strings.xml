@@ -46,4 +46,21 @@
     <string name="welcome_to_the_app">Welcome to the App!</string>
     <string name="we_re_glad_to_have_you_here">We\'re glad to have you here.</string>
     <string name="notification_permission_denied">Notification permission denied</string>
+    <string name="enter_the_verification_code_sent_to_your_email">Enter the verification code sent to your email</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="verify">Verify</string>
+    <string name="resend_code">Resend Code</string>
+    <string name="_2fa">2FA</string>
+    <string name="please_check_your_inbox">Verification email resent. Please check your inbox.</string>
+    <string name="failed_to_resend_email">Failed to resend email. Please try again.</string>
+    <string name="verification_failed">Verification failed. Please try again.</string>
+    <string name="please_enter_the_verification_code">Please enter the verification code</string>
+    <string name="failed_to_send_verification_email">Failed to send verification email.</string>
+    <string name="invalid_verification_code_please_try_again">Invalid verification code. Please try again.</string>
+    <string name="user_email_is_not_available">User email is not available.</string>
+    <string name="user_not_authenticated">User not authenticated.</string>
+    <string name="a_verification_code_has_been_sent_to_your_email">A verification code has been sent to your email.</string>
+    <string name="failed_to_send_the_verification_email_please_try_again">Failed to send the verification email. Please try again.</string>
+    <string name="failed_to_create_the_email_message">Failed to create the email message.</string>
+    <string name="failed_to_get_user_email">Failed to get user email from FirebaseUser.</string>
 </resources>

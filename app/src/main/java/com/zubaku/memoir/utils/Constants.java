@@ -8,4 +8,5 @@ public class Constants {
   public static final String YES = "Yes";
   public static final String NO = "No";
   public static final String WELCOME_CHANNEL_ID = "WELCOME_CHANNEL_ID";
+  public static final String VERIFICATION_ID = "verificationId";
 }

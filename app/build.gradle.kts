@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
@@ -18,14 +20,45 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            val secretsProperties = Properties().apply {
+                file("../env.properties").inputStream().use { load(it) }
+            }
+
+            val smtpSenderEmail =
+                secretsProperties["smtp_sender_email"]?.toString() ?: "default_email"
+            val smtpSenderPassword =
+                secretsProperties["smtp_sender_password"]?.toString() ?: "default_password"
+
+            buildConfigField("String", "SMTP_SENDER_EMAIL", "\"$smtpSenderEmail\"")
+            buildConfigField("String", "SMTP_SENDER_PASSWORD", "\"$smtpSenderPassword\"")
+        }
+
+        getByName("debug") {
+            val secretsProperties = Properties().apply {
+                file("../env.properties").inputStream().use { load(it) }
+            }
+
+            val smtpSenderEmail =
+                secretsProperties["smtp_sender_email"]?.toString() ?: "default_email"
+            val smtpSenderPassword =
+                secretsProperties["smtp_sender_password"]?.toString() ?: "default_password"
+
+            buildConfigField("String", "SMTP_SENDER_EMAIL", "\"$smtpSenderEmail\"")
+            buildConfigField("String", "SMTP_SENDER_PASSWORD", "\"$smtpSenderPassword\"")
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -58,5 +91,6 @@ dependencies {
     implementation(libs.google.firebase.storage)
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
-
+    implementation(libs.android.mail)
+    implementation(libs.android.activation)
 }

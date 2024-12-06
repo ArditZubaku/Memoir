@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_main"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50sp"
+        android:fontFamily="@font/jetbrainsmono_bold"
+        android:text="@string/_2fa"
+        android:textColor="@color/white"
+        android:textSize="100sp" />
+
+    <TextView
+        android:id="@+id/verificationPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25sp"
+        android:text="@string/enter_the_verification_code_sent_to_your_email"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/verificationCodeEditText"
+        android:layout_width="match_parent"
+        android:layout_height="100sp"
+        android:layout_marginTop="16dp"
+        android:hint="@string/verification_code"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        android:textColorHint="#C1C1C1"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/verifyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/verify" />
+
+    <TextView
+        android:id="@+id/resendCodeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/half_background"
+        android:ellipsize="end"
+        android:gravity="start|center_vertical"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:text="@string/resend_code"
+        android:textColor="#FFFFFF"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
