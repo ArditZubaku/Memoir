@@ -17,4 +17,5 @@
     <string name="post_title">Post Title</string>
     <string name="post_date">Post Date</string>
     <string name="save_post">Save Post</string>
+    <string name="error_updating_profile">Error updating profile</string>
 </resources>

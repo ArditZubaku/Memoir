@@ -11,24 +11,18 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.zubaku.memoir.R;
-import com.zubaku.memoir.utils.Collections;
 
 public class SignUpActivity extends AppCompatActivity {
+  // UI Elements
   TextView signUpText;
   EditText signUpUsername;
   AutoCompleteTextView signUpEmail;
@@ -38,14 +32,6 @@ public class SignUpActivity extends AppCompatActivity {
 
   // Firebase Auth
   private FirebaseAuth auth;
-  // Used to check changes on user's auth state - triggers callback when user signs in or out
-  private FirebaseAuth.AuthStateListener authStateListener;
-  // Current authenticated user
-  private FirebaseUser currentUser;
-
-  // Connection
-  private FirebaseFirestore db = FirebaseFirestore.getInstance();
-  private CollectionReference collectionReference = db.collection(Collections.Users);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
           return insets;
         });
 
+    // Initialize UI components
     signUpText = findViewById(R.id.signUpText);
     signUpUsername = findViewById(R.id.signUpUsername);
     signUpEmail = findViewById(R.id.signUpEmail);
@@ -67,21 +54,10 @@ public class SignUpActivity extends AppCompatActivity {
     signUpButton = findViewById(R.id.signUpButton);
     signUpErrorMessage = findViewById(R.id.signUpErrorMessage);
 
+    // Initialize Firebase Auth
     auth = FirebaseAuth.getInstance();
 
-    // Listen for changes in the authentication state
-    // and respond to them accordingly when the state changes
-    authStateListener =
-        firebaseAuth -> {
-          currentUser = firebaseAuth.getCurrentUser();
-          // Check if the user is logged in
-          if (currentUser != null) {
-            // User is already logged in
-          } else {
-            // No user is logged in
-          }
-        };
-
+    // Set up sign-up button click listener
     signUpButton.setOnClickListener(
         v -> {
           if (areTextFieldsValid(signUpUsername, signUpEmail, signUpPassword)) {
@@ -103,9 +79,13 @@ public class SignUpActivity extends AppCompatActivity {
           .addOnCompleteListener(
               task -> {
                 if (task.isSuccessful()) {
-                  showToast("User Created Successfully", this);
-                  clearFields();
+                  // User created successfully, now set the display name
+                  FirebaseUser user = auth.getCurrentUser();
+                  if (user != null) {
+                    updateUserProfile(user, username); // Update display name
+                  }
                 } else {
+                  // If sign-up fails, show the error message
                   signUpErrorMessage.setText(buildErrorMessage(task.getException()));
                   showToast("User Creation Failed", this);
                 }
@@ -113,7 +93,31 @@ public class SignUpActivity extends AppCompatActivity {
     }
   }
 
+  private void updateUserProfile(FirebaseUser user, String username) {
+    // Set the user's display name
+    UserProfileChangeRequest profileUpdates =
+        new UserProfileChangeRequest.Builder()
+            .setDisplayName(username) // Set the username as display name
+            .build();
+
+    user.updateProfile(profileUpdates)
+        .addOnCompleteListener(
+            profileUpdateTask -> {
+              if (profileUpdateTask.isSuccessful()) {
+                // Successfully updated display name
+                showToast("User Created Successfully", this);
+                clearFields();
+                // TODO: Add a go back to sign in button
+              } else {
+                // Handle the failure to update profile
+                showToast("Error updating profile", this);
+                signUpErrorMessage.setText(getString(R.string.error_updating_profile));
+              }
+            });
+    }
+
   private void clearFields() {
+    // Clear all fields and error message after successful sign-up
     signUpUsername.setText(null);
     signUpEmail.setText(null);
     signUpPassword.setText(null);
