@@ -157,8 +157,12 @@ public class AddPostActivity extends AppCompatActivity {
 
   // Create a Post object and save it to Firestore
   private void createPost(String title, String description, String imageUrl) {
+    // Generate the ID for the new post (Firestore auto-generates if not provided)
+    String postId = collectionReference.document().getId();
+
     Post post =
         new Post(
+            postId,
             title,
             description,
             imageUrl,
