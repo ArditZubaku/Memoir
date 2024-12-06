@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -66,10 +67,17 @@ public class AllPostsActivity extends AppCompatActivity {
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     postsList = new ArrayList<>();
+
+    FloatingActionButton fab = findViewById(R.id.fab);
+    fab.setOnClickListener(
+        v -> {
+          if (currentUser != null && auth != null) {
+            startActivity(new Intent(AllPostsActivity.this, AddPostActivity.class));
+          }
+        });
   }
 
   // Add a menu
-
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.post_menu, menu);
