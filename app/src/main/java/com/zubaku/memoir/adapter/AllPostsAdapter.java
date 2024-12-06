@@ -2,10 +2,10 @@ package com.zubaku.memoir.adapter;
 
 import android.content.Context;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -16,16 +16,17 @@ import com.zubaku.memoir.model.Post;
 import java.util.List;
 
 public class AllPostsAdapter extends RecyclerView.Adapter<AllPostsAdapter.AllPostsViewHolder> {
-
   private final Context context;
   private final List<Post> postsList;
+  private final PostClickListener postClickListener;
 
-  public AllPostsAdapter(Context context, List<Post> postsList) {
+  public AllPostsAdapter(
+      Context context, List<Post> postsList, PostClickListener postClickListener) {
     this.context = context;
     this.postsList = postsList;
+    this.postClickListener = postClickListener;
   }
 
-  // Responsible for creating new view holders for the items
   @NonNull
   @Override
   public AllPostsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,7 +34,6 @@ public class AllPostsAdapter extends RecyclerView.Adapter<AllPostsAdapter.AllPos
     return new AllPostsViewHolder(view);
   }
 
-  // Responsible for updating the view holder with the data from the model
   @Override
   public void onBindViewHolder(@NonNull AllPostsViewHolder holder, int position) {
     Post currentPost = postsList.get(position);
@@ -48,6 +48,13 @@ public class AllPostsAdapter extends RecyclerView.Adapter<AllPostsAdapter.AllPos
 
     String imageUrl = currentPost.getImageURL();
     Glide.with(context).load(imageUrl).fitCenter().into(holder.image);
+
+    // Handle Edit and Delete button clicks
+    holder.editButton.setOnClickListener(v -> postClickListener.onEditPostClick(currentPost));
+    holder.deleteButton.setOnClickListener(v -> postClickListener.onDeletePostClick(currentPost));
+
+    // Add click listener to trigger post view details
+    holder.itemView.setOnClickListener(v -> postClickListener.onPostClick(currentPost));
   }
 
   @Override
@@ -55,12 +62,10 @@ public class AllPostsAdapter extends RecyclerView.Adapter<AllPostsAdapter.AllPos
     return postsList.size();
   }
 
-  // ViewHolder pattern:
-  // Declare the views that you want to display in the list
-  // Holds references to the views within an item layout
   public static class AllPostsViewHolder extends RecyclerView.ViewHolder {
     public TextView title, description, timeAdded, username;
-    public ImageView image, shareButton;
+    public ImageView image;
+    public ImageButton editButton, deleteButton;
 
     public AllPostsViewHolder(@NonNull View itemView) {
       super(itemView);
@@ -69,8 +74,20 @@ public class AllPostsAdapter extends RecyclerView.Adapter<AllPostsAdapter.AllPos
       timeAdded = itemView.findViewById(R.id.timestamp);
       username = itemView.findViewById(R.id.username);
       image = itemView.findViewById(R.id.image);
-      shareButton = itemView.findViewById(R.id.shareButton);
-      shareButton.setOnClickListener(v -> Log.i("Memoir", "Sharing the post..."));
+      editButton = itemView.findViewById(R.id.editButton);
+      deleteButton = itemView.findViewById(R.id.deleteButton);
     }
+  }
+
+  // Interface for post click listener
+  public interface PostClickListener {
+    // View post
+    void onPostClick(Post post);
+
+    // Edit post
+    void onEditPostClick(Post post);
+
+    // Delete post
+    void onDeletePostClick(Post post);
   }
 }

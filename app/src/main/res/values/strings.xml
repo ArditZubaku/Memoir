@@ -29,4 +29,18 @@
     <string name="forgot_password">Forgot Password</string>
     <string name="enter_valid_email">Please enter a valid email.</string>
     <string name="link_sent">Password reset link sent!</string>
+    <string name="edit_button">Edit Button</string>
+    <string name="delete_button">Delete Button</string>
+    <string name="title">Title</string>
+    <string name="enter_title">Enter title</string>
+    <string name="enter_description">Enter description</string>
+    <string name="image_preview">Image preview</string>
+    <string name="change_image">Change Image</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="post_not_found">Post not found!</string>
+    <string name="error_no_post_id_provided">Error: No post ID provided</string>
+    <string name="post_updated_successfully">Post updated successfully</string>
+    <string name="title_and_description_cannot_be_empty">Title and description cannot be empty</string>
+    <string name="are_you_sure_you_want_to_delete_this_post">Are you sure you want to delete this post?</string>
 </resources>

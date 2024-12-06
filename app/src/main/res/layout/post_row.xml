@@ -24,14 +24,6 @@
             android:padding="3sp"
             android:text="@string/test"
             android:textSize="17sp" />
-
-        <ImageButton
-            android:id="@+id/shareButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:importantForAccessibility="no"
-            android:src="@android:drawable/ic_menu_share" />
     </LinearLayout>
 
     <LinearLayout
@@ -82,6 +74,32 @@
             android:textStyle="italic"
             android:visibility="visible" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageButton
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/edit_button"
+            android:importantForAccessibility="yes"
+            android:src="@android:drawable/ic_menu_edit" />
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/delete_button"
+            android:importantForAccessibility="yes"
+            android:src="@android:drawable/ic_menu_delete" />
     </LinearLayout>
 
 

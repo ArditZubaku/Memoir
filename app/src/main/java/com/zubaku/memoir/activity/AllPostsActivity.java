@@ -1,11 +1,20 @@
 package com.zubaku.memoir.activity;
 
+import static com.zubaku.memoir.utils.Constants.DESCRIPTION;
+import static com.zubaku.memoir.utils.Constants.IMAGE_URL;
+import static com.zubaku.memoir.utils.Constants.NO;
+import static com.zubaku.memoir.utils.Constants.POST_ID;
+import static com.zubaku.memoir.utils.Constants.TITLE;
+import static com.zubaku.memoir.utils.Constants.YES;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -130,16 +139,74 @@ public class AllPostsActivity extends AppCompatActivity {
     // Loop through the snapshots and add posts to the list
     for (QueryDocumentSnapshot snapshot : querySnapshot) {
       Post post = snapshot.toObject(Post.class);
+      post.setId(snapshot.getId()); // Assign the Firestore document ID to the post object
       postsList.add(post);
     }
 
     // If adapter is not already set, set it
     if (allPostsAdapter == null) {
-      allPostsAdapter = new AllPostsAdapter(AllPostsActivity.this, postsList);
+      allPostsAdapter =
+          new AllPostsAdapter(
+              AllPostsActivity.this,
+              postsList,
+              new AllPostsAdapter.PostClickListener() {
+                @Override
+                public void onPostClick(Post post) {
+                  // View post
+                  openEditPostActivity(post);
+                }
+
+                @Override
+                public void onEditPostClick(Post post) {
+                  // Edit post
+                  openEditPostActivity(post);
+                }
+
+                @Override
+                public void onDeletePostClick(Post post) {
+                  // Delete post
+                  deletePost(post);
+                }
+              });
       recyclerView.setAdapter(allPostsAdapter);
     } else {
       // Use notifyItemRangeInserted to notify only about the new items added
       allPostsAdapter.notifyItemRangeInserted(previousSize, postsList.size());
     }
+  }
+
+  // Opens the EditPostActivity for a specific post
+  private void openEditPostActivity(Post post) {
+    Log.i("QETU", post.toString());
+    Intent intent = new Intent(AllPostsActivity.this, EditPostActivity.class);
+    intent.putExtra(POST_ID, post.getId());
+    intent.putExtra(TITLE, post.getTitle());
+    intent.putExtra(DESCRIPTION, post.getDescription());
+    intent.putExtra(IMAGE_URL, post.getImageURL());
+    startActivity(intent);
+  }
+
+  private void deletePost(Post post) {
+    // Confirm deletion with a dialog before deleting
+    new AlertDialog.Builder(this)
+        .setMessage(R.string.are_you_sure_you_want_to_delete_this_post)
+        .setPositiveButton(
+            YES,
+            (dialog, which) ->
+                collectionReference
+                    .document(post.getId())
+                    .delete()
+                    .addOnSuccessListener(
+                        aVoid -> {
+                          // Find the post's position and remove it
+                          int position = postsList.indexOf(post);
+                          if (position >= 0) {
+                            postsList.remove(position);
+                            allPostsAdapter.notifyItemRemoved(position);
+                          }
+                        })
+                    .addOnFailureListener(Helpers::buildErrorMessage))
+        .setNegativeButton(NO, null)
+        .show();
   }
 }
