@@ -5,6 +5,8 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -73,6 +75,11 @@ public class AllPostsAdapter extends RecyclerView.Adapter<AllPostsAdapter.AllPos
       description = itemView.findViewById(R.id.description);
       timeAdded = itemView.findViewById(R.id.timestamp);
       username = itemView.findViewById(R.id.username);
+
+      Context context = itemView.getContext();
+      Animation fadeIn = AnimationUtils.loadAnimation(context, R.anim.fade_in);
+      username.startAnimation(fadeIn);
+
       image = itemView.findViewById(R.id.image);
       editButton = itemView.findViewById(R.id.editButton);
       deleteButton = itemView.findViewById(R.id.deleteButton);
