@@ -1,8 +1,11 @@
 package com.zubaku.memoir.model;
 
+import androidx.annotation.NonNull;
 import com.google.firebase.Timestamp;
 
 public class Post {
+  // Firestore document ID
+  private String id;
   private String title;
   private String description;
   private String imageURL;
@@ -14,18 +17,28 @@ public class Post {
   public Post() {}
 
   public Post(
+      String id,
       String title,
       String description,
       String imageURL,
       String userID,
       String username,
       Timestamp timeAdded) {
+    this.id = id;
     this.title = title;
     this.description = description;
     this.imageURL = imageURL;
     this.userID = userID;
     this.username = username;
     this.timeAdded = timeAdded;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getTitle() {
@@ -74,5 +87,32 @@ public class Post {
 
   public void setTimeAdded(Timestamp timeAdded) {
     this.timeAdded = timeAdded;
+  }
+
+  @NonNull
+  @Override
+  public String toString() {
+    return "Post{"
+        + "id='"
+        + id
+        + '\''
+        + ", title='"
+        + title
+        + '\''
+        + ", description='"
+        + description
+        + '\''
+        + ", imageURL='"
+        + imageURL
+        + '\''
+        + ", userID='"
+        + userID
+        + '\''
+        + ", username='"
+        + username
+        + '\''
+        + ", timeAdded="
+        + timeAdded
+        + '}';
   }
 }
