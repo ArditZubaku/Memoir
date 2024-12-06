@@ -96,4 +96,42 @@ public class AllPostsActivity extends AppCompatActivity {
 
     return super.onOptionsItemSelected(item);
   }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    fetchPosts();
+  }
+
+  // Fetch posts from Firestore
+  private void fetchPosts() {
+    collectionReference
+        .get()
+        .addOnSuccessListener(this::handleQuerySuccess)
+        .addOnFailureListener(Helpers::buildErrorMessage);
+  }
+
+  // Handle the success of the Firestore query
+  private void handleQuerySuccess(QuerySnapshot querySnapshot) {
+    // Save the size of the list before clearing
+    int previousSize = postsList.size();
+
+    // Clear the previous list to avoid duplicates
+    postsList.clear();
+
+    // Loop through the snapshots and add posts to the list
+    for (QueryDocumentSnapshot snapshot : querySnapshot) {
+      Post post = snapshot.toObject(Post.class);
+      postsList.add(post);
+    }
+
+    // If adapter is not already set, set it
+    if (allPostsAdapter == null) {
+      allPostsAdapter = new AllPostsAdapter(AllPostsActivity.this, postsList);
+      recyclerView.setAdapter(allPostsAdapter);
+    } else {
+      // Use notifyItemRangeInserted to notify only about the new items added
+      allPostsAdapter.notifyItemRangeInserted(previousSize, postsList.size());
+    }
+  }
 }
