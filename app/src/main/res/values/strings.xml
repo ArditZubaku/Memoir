@@ -24,5 +24,9 @@
     <string name="login_failed">Login Failed!!!</string>
     <string name="fill_and_select_image">Please fill in all fields and select an image.</string>
     <string name="go_back_to_sign_in">Go back to Sign In</string>
-
+    <string name="enter_your_email">Enter your email</string>
+    <string name="send_reset_link">Send Reset Link</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="enter_valid_email">Please enter a valid email.</string>
+    <string name="link_sent">Password reset link sent!</string>
 </resources>

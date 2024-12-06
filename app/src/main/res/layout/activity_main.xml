@@ -13,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100sp"
-        android:text="@string/memoir_title"
         android:fontFamily="@font/jetbrainsmono_bold"
+        android:text="@string/memoir_title"
         android:textColor="@android:color/white"
         android:textSize="60sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -81,7 +81,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginButton"
-        app:layout_constraintVertical_bias="0.15" />
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/forgotPasswordText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:text="@string/forgot_password"
+        android:textColor="@android:color/background_dark"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <TextView
         android:id="@+id/errorMessage"

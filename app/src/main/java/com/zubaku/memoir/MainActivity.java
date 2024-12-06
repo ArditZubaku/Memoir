@@ -5,6 +5,7 @@ import static com.zubaku.memoir.utils.Helpers.buildErrorMessage;
 import static com.zubaku.memoir.utils.Helpers.showToast;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.zubaku.memoir.activity.AllPostsActivity;
+import com.zubaku.memoir.activity.ForgotPasswordActivity;
 import com.zubaku.memoir.activity.SignUpActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,6 +64,14 @@ public class MainActivity extends AppCompatActivity {
 
           loginUser(emailText, passwordText);
         });
+
+    TextView forgotPasswordText = findViewById(R.id.forgotPasswordText);
+    forgotPasswordText.setPaintFlags(
+        forgotPasswordText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    forgotPasswordText.setClickable(true);
+    forgotPasswordText.setFocusable(true);
+    forgotPasswordText.setOnClickListener(
+        v -> startActivity(new Intent(MainActivity.this, ForgotPasswordActivity.class)));
   }
 
   private void loginUser(String email, String password) {
