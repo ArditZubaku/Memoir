@@ -9,10 +9,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -44,12 +46,16 @@ public class MainActivity extends AppCompatActivity {
   TextView errorMessage;
 
   private FirebaseAuth auth;
+  private static final String PREFS_NAME = "AppPreferences";
+  private static final String CHANNEL_CREATED_KEY = "NotificationChannelCreated";
+  private static final String NOTIFICATION_SHOWN_KEY = "NotificationShown";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     EdgeToEdge.enable(this);
     setContentView(R.layout.activity_main);
+
     ViewCompat.setOnApplyWindowInsetsListener(
         findViewById(R.id.main),
         (v, insets) -> {
@@ -58,11 +64,21 @@ public class MainActivity extends AppCompatActivity {
           return insets;
         });
 
-    createNotificationChannel();
+    // Ensure notification channel is created only once
+    if (!isNotificationChannelCreated()) {
+      createNotificationChannel();
+      setNotificationChannelCreated();
+      Log.i("QETU", "CHANNEL CREATED");
+    }
 
-    // For Android 13+, request notification permission and show notification
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      showWelcomeNotification();
+    // Show the welcome notification only once during the app's first launch
+    if (!isNotificationShown()) {
+      Log.i("QETU", "NTF SHOWN");
+      // For Android 13+, request notification permission and show notification
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        showWelcomeNotification();
+      }
+      setNotificationShown(); // Mark notification as shown
     }
 
     loginButton = findViewById(R.id.loginButton);
@@ -145,13 +161,11 @@ public class MainActivity extends AppCompatActivity {
 
     NotificationCompat.Builder builder =
         new NotificationCompat.Builder(this, WELCOME_CHANNEL_ID)
-            // TODO: Maybe add a better icon
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(getString(R.string.welcome_to_the_app))
             .setContentText(getString(R.string.we_re_glad_to_have_you_here))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true)
-            // This makes it pop up as a full-screen notification
             .setFullScreenIntent(pendingIntent, true);
 
     // Show the notification
@@ -173,5 +187,33 @@ public class MainActivity extends AppCompatActivity {
         showToast(getString(R.string.notification_permission_denied), this);
       }
     }
+  }
+
+  // Check if notification channel has been created
+  private boolean isNotificationChannelCreated() {
+    SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+    return prefs.getBoolean(CHANNEL_CREATED_KEY, false);
+  }
+
+  // Mark the notification channel as created
+  private void setNotificationChannelCreated() {
+    SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+    SharedPreferences.Editor editor = prefs.edit();
+    editor.putBoolean(CHANNEL_CREATED_KEY, true);
+    editor.apply();
+  }
+
+  // Check if the notification has been shown before
+  private boolean isNotificationShown() {
+    SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+    return prefs.getBoolean(NOTIFICATION_SHOWN_KEY, false);
+  }
+
+  // Mark the notification as shown
+  private void setNotificationShown() {
+    SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+    SharedPreferences.Editor editor = prefs.edit();
+    editor.putBoolean(NOTIFICATION_SHOWN_KEY, true);
+    editor.apply();
   }
 }
