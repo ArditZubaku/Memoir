@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_add"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/add_post"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_sign_out"
         android:title="@string/sign_out"
         app:showAsAction="never" />

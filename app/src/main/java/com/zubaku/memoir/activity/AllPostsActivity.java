@@ -8,17 +8,17 @@ import static com.zubaku.memoir.utils.Constants.TITLE;
 import static com.zubaku.memoir.utils.Constants.YES;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -58,15 +58,11 @@ public class AllPostsActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    EdgeToEdge.enable(this);
     setContentView(R.layout.activity_all_posts);
-    ViewCompat.setOnApplyWindowInsetsListener(
-        findViewById(R.id.main),
-        (v, insets) -> {
-          Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-          v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-          return insets;
-        });
+
+    // Set up toolbar
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
     auth = FirebaseAuth.getInstance();
     currentUser = auth.getCurrentUser();
@@ -91,6 +87,17 @@ public class AllPostsActivity extends AppCompatActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.post_menu, menu);
+
+    // Find the sign out menu item
+    MenuItem signOutItem = menu.findItem(R.id.action_sign_out);
+
+    // Apply the custom style (text color)
+    if (signOutItem != null) {
+      SpannableString spannable = new SpannableString(signOutItem.getTitle());
+      spannable.setSpan(new ForegroundColorSpan(Color.BLACK), 0, spannable.length(), 0);
+      signOutItem.setTitle(spannable);
+    }
+
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -98,12 +105,7 @@ public class AllPostsActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     int itemId = item.getItemId();
 
-    if (itemId == R.id.action_add) {
-      if (currentUser != null && auth != null) {
-        // Go to the add post activity
-        startActivity(new Intent(AllPostsActivity.this, AddPostActivity.class));
-      }
-    } else if (itemId == R.id.action_sign_out) {
+    if (itemId == R.id.action_sign_out) {
       if (currentUser != null && auth != null) {
         auth.signOut();
         startActivity(new Intent(AllPostsActivity.this, MainActivity.class));
