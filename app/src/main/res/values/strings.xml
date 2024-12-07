@@ -63,4 +63,5 @@
     <string name="failed_to_send_the_verification_email_please_try_again">Failed to send the verification email. Please try again.</string>
     <string name="failed_to_create_the_email_message">Failed to create the email message.</string>
     <string name="failed_to_get_user_email">Failed to get user email from FirebaseUser.</string>
+    <string name="the_post_was_deleted_successfully">The post was deleted successfully!</string>
 </resources>

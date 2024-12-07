@@ -6,6 +6,7 @@ import static com.zubaku.memoir.utils.Constants.NO;
 import static com.zubaku.memoir.utils.Constants.POST_ID;
 import static com.zubaku.memoir.utils.Constants.TITLE;
 import static com.zubaku.memoir.utils.Constants.YES;
+import static com.zubaku.memoir.utils.Helpers.showToast;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,10 +26,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.zubaku.memoir.MainActivity;
 import com.zubaku.memoir.R;
 import com.zubaku.memoir.adapter.AllPostsAdapter;
@@ -49,9 +49,6 @@ public class AllPostsActivity extends AppCompatActivity {
   // List of Posts
   private List<Post> postsList;
 
-  // RecyclerView
-  private RecyclerView recyclerView;
-
   // Adapter
   private AllPostsAdapter allPostsAdapter;
 
@@ -67,12 +64,34 @@ public class AllPostsActivity extends AppCompatActivity {
     auth = FirebaseAuth.getInstance();
     currentUser = auth.getCurrentUser();
 
-    // Widgets
-    recyclerView = findViewById(R.id.recyclerView);
+    // RecyclerView
+    RecyclerView recyclerView = findViewById(R.id.recyclerView);
     recyclerView.setHasFixedSize(true);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     postsList = new ArrayList<>();
+
+    allPostsAdapter =
+        new AllPostsAdapter(
+            AllPostsActivity.this,
+            postsList,
+            new AllPostsAdapter.PostClickListener() {
+              @Override
+              public void onPostClick(Post post) {
+                openEditPostActivity(post);
+              }
+
+              @Override
+              public void onEditPostClick(Post post) {
+                openEditPostActivity(post);
+              }
+
+              @Override
+              public void onDeletePostClick(Post post) {
+                deletePost(post);
+              }
+            });
+    recyclerView.setAdapter(allPostsAdapter);
 
     FloatingActionButton fab = findViewById(R.id.fab);
     fab.setOnClickListener(
@@ -128,55 +147,70 @@ public class AllPostsActivity extends AppCompatActivity {
     collectionReference
         // Order by timeAdded, latest first
         .orderBy("timeAdded", Query.Direction.DESCENDING)
-        .get()
-        .addOnSuccessListener(this::handleQuerySuccess)
-        .addOnFailureListener(Helpers::buildErrorMessage);
+        .addSnapshotListener(
+            (querySnapshot, e) -> {
+              if (e != null) {
+                Helpers.buildErrorMessage(e);
+                return;
+              }
+
+              if (querySnapshot != null) {
+                for (DocumentChange change : querySnapshot.getDocumentChanges()) {
+                  Post post = change.getDocument().toObject(Post.class);
+                  post.setId(change.getDocument().getId());
+
+                  handleDocumentChange(change.getType(), post);
+                }
+              }
+            });
   }
-  // Handle the success of the Firestore query
-  private void handleQuerySuccess(QuerySnapshot querySnapshot) {
-    // Save the size of the list before clearing
-    int previousSize = postsList.size();
 
-    // Clear the previous list to avoid duplicates
-    postsList.clear();
+  private void handleDocumentChange(DocumentChange.Type changeType, Post post) {
+    switch (changeType) {
+      case ADDED:
+        handlePostAdded(post);
+        break;
+      case MODIFIED:
+        handlePostModified(post);
+        break;
+      case REMOVED:
+        handlePostRemoved(post);
+        break;
+    }
+  }
 
-    // Loop through the snapshots and add posts to the list
-    for (QueryDocumentSnapshot snapshot : querySnapshot) {
-      Post post = snapshot.toObject(Post.class);
-      post.setId(snapshot.getId()); // Assign the Firestore document ID to the post object
+  private void handlePostAdded(Post post) {
+    int position = findPostPositionById(post.getId());
+    if (position == -1) {
       postsList.add(post);
+      allPostsAdapter.notifyItemInserted(0);
     }
+  }
 
-    // If adapter is not already set, set it
-    if (allPostsAdapter == null) {
-      allPostsAdapter =
-          new AllPostsAdapter(
-              AllPostsActivity.this,
-              postsList,
-              new AllPostsAdapter.PostClickListener() {
-                @Override
-                public void onPostClick(Post post) {
-                  // View post
-                  openEditPostActivity(post);
-                }
-
-                @Override
-                public void onEditPostClick(Post post) {
-                  // Edit post
-                  openEditPostActivity(post);
-                }
-
-                @Override
-                public void onDeletePostClick(Post post) {
-                  // Delete post
-                  deletePost(post);
-                }
-              });
-      recyclerView.setAdapter(allPostsAdapter);
-    } else {
-      // Use notifyItemRangeInserted to notify only about the new items added
-      allPostsAdapter.notifyItemRangeInserted(previousSize, postsList.size());
+  private void handlePostModified(Post post) {
+    int position = findPostPositionById(post.getId());
+    if (position >= 0) {
+      postsList.set(position, post);
+      allPostsAdapter.notifyItemChanged(position);
     }
+  }
+
+  private void handlePostRemoved(Post post) {
+    int position = findPostPositionById(post.getId());
+    if (position >= 0) {
+      postsList.remove(position);
+      allPostsAdapter.notifyItemRemoved(position);
+    }
+  }
+
+  private int findPostPositionById(String postId) {
+    for (int i = 0; i < postsList.size(); i++) {
+      if (postsList.get(i).getId().equals(postId)) {
+        return i;
+      }
+    }
+    // Post not found
+    return -1;
   }
 
   // Opens the EditPostActivity for a specific post
@@ -201,14 +235,8 @@ public class AllPostsActivity extends AppCompatActivity {
                     .document(post.getId())
                     .delete()
                     .addOnSuccessListener(
-                        aVoid -> {
-                          // Find the post's position and remove it
-                          int position = postsList.indexOf(post);
-                          if (position >= 0) {
-                            postsList.remove(position);
-                            allPostsAdapter.notifyItemRemoved(position);
-                          }
-                        })
+                        aVoid ->
+                            showToast(getString(R.string.the_post_was_deleted_successfully), this))
                     .addOnFailureListener(Helpers::buildErrorMessage))
         .setNegativeButton(NO, null)
         .show();
